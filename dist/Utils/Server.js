@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const provAuthDebug = require('debug')('provider:auth');
 class Server {
-  constructor(https, ssl, ENCRYPTIONKEY, corsOpt, serverAddon) {
+  constructor(https, ssl, ENCRYPTIONKEY, corsOpt, serverAddon, devMode, helmetParams) {
     this.app = express();
     this.server = false;
     this.ssl = false;
@@ -32,11 +32,18 @@ class Server {
     });
 
     // Setting up helmet
-    this.app.use(helmet({
+    const helmetConfig = {
       frameguard: false,
       // Disabling frameguard so that Ltijs can send resources to iframes inside LMS's
-      contentSecurityPolicy: false
-    }));
+      contentSecurityPolicy: false,
+      ...(devMode ? {
+        crossOriginEmbedderPolicy: false,
+        crossOriginOpenerPolicy: false,
+        crossOriginResourcePolicy: false
+      } : {}),
+      ...helmetParams
+    };
+    this.app.use(helmet(helmetConfig));
 
     // Controlling cors, having in mind that resources in another domain need to be explicitly allowed, and that ltijs controls origin blocking unregistered platforms
     // This block of code allows cors specifying the host instead of just returnin '*'. And then ltijs blocks requests from unregistered platforms. (Except for whitelisted routes)

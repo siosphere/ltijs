@@ -1,7 +1,7 @@
 "use strict";
 
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
@@ -184,6 +184,7 @@ class Provider {
      * @param {Object} [options.dynReg.customParameters] - Custom parameters object. (Ex: { key: 'value' })
      * @param {Boolean} [options.dynReg.autoActivate = false] - Platform auto activation flag. If true, every Platform registered dynamically is immediately activated. Defaults to false.
      * @param {Boolean} [options.dynReg.useDeepLinking = true] - Deep Linking usage flag. If true, sets up deep linking in the platform. Defaults to true.
+     * @param {Boolean} [options.helmetConfig = {}] - Options to pass to helmet. (Ex: { frameguard: false })
      */
   setup(encryptionkey, database, options) {
     if (_classPrivateFieldGet(_setup, this)) throw new Error('PROVIDER_ALREADY_SETUP');
@@ -212,7 +213,7 @@ class Provider {
       if (options.cookies.domain) _classPrivateFieldGet(_cookieOptions, this).domain = options.cookies.domain;
     }
     _classPrivateFieldSet(_ENCRYPTIONKEY2, this, encryptionkey);
-    _classPrivateFieldSet(_server, this, new Server(options ? options.https : false, options ? options.ssl : false, _classPrivateFieldGet(_ENCRYPTIONKEY2, this), options ? options.cors : true, options ? options.serverAddon : false));
+    _classPrivateFieldSet(_server, this, new Server(options ? options.https : false, options ? options.ssl : false, _classPrivateFieldGet(_ENCRYPTIONKEY2, this), options ? options.cors : true, options ? options.serverAddon : false, options ? options.devMode : false, options && options.helmetConfig ? options.helmetConfig : {}));
 
     /**
      * @description Express server object.
